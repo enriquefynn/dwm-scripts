@@ -3,7 +3,9 @@ dwm-scripts
 
 Scripts for DWM working with FreeBSD OS.
 The scripts are hard coded for a FreeBSD machine and can easily be modified
-to work under anything
+to work under anything.
+
+Using the patch [dwm-ansistatuscolors](https://gist.github.com/la11111/4054818)
 
 Features:
 BTC ticker from BTC-e
