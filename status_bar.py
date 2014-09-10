@@ -30,8 +30,8 @@ battery_state = battery[12][9:-1]
 battery_percentage = int(battery[13][20:-1])
 battery_bar = [bluefg, 'On AC', reset]
 
-#battery_state = ''
-#battery_percentage = 10
+battery_state = ''
+battery_percentage = 64
 
 if battery_state != 'high':
     if battery_percentage >= 60:
