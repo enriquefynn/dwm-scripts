@@ -13,5 +13,5 @@ Date
 
 Example:
 
-[example](example.png "Bar example")
+![example](example.png "Bar example")
 
