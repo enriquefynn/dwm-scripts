@@ -64,9 +64,9 @@ if battery_state != 'high':
 #Wireless
 wlan = check_output(['ifconfig', 'wlan0'])
 try:
-    ssid = re.search(r'ssid \t*\"(.+?)\"', wlan).group(1)
+    ssid = re.search(r'ssid \t*\"?(.+?)\"?channel', wlan).group(1)
 except:
-    ssid = ""
+    ssid = None
 
 #Date
 date = [check_output('date').strip()]
@@ -74,7 +74,7 @@ date = [check_output('date').strip()]
 attr_list = []
 attr_list += weather_bar
 if ssid != None:
-    attr_list += ['wlan: ', winefg, ssid, reset, ' | ']
+    attr_list += ['wlan: ', winefg, ssid, reset, '| ']
 
 btc_ticker = getCoinFromBtce('btc')
 ltc_ticker = getCoinFromBtce('ltc')
