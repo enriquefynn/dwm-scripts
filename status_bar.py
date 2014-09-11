@@ -85,7 +85,6 @@ attr_list += '| '
 attr_list.extend(battery_bar)
 attr_list += ' | '
 attr_list.extend(date)
-attr_list += ' | '
 
 call(['xsetroot','-name',''.join(
     attr_list
