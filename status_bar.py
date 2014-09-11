@@ -3,15 +3,16 @@
 
 import json
 import urllib2
+import re
 from subprocess import call,check_output
 
 
 def getBTCAvgFromBtce():
     return round(json.loads(urllib2.urlopen("https://btc-e.com/api/2/btc_usd/ticker")\
-            .read())['ticker']['avg'], 2)
+            .read())['ticker']['last'], 2)
 def getLTCAvgFromBtce():
     return round(json.loads(urllib2.urlopen("https://btc-e.com/api/2/ltc_usd/ticker")\
-            .read())['ticker']['avg'], 2)
+            .read())['ticker']['last'], 2)
 
 redfg = '\x1b[38;5;196m'
 bluefg = '\x1b[38;5;21m'
@@ -25,9 +26,9 @@ yellowbg = '\x1b[48;5;226m'
 blackbg = '\x1b[48;5;16m'
 reset = '\x1b[0m'
 
-battery = check_output(['acpiconf','-i', '0']).split('\n')
-battery_state = battery[12][9:-1]
-battery_percentage = int(battery[13][20:-1])
+battery = check_output(['acpiconf','-i', '0'])
+battery_state = re.search(r'State:\t*(\w*)', battery).group(1)
+battery_percentage = int(re.search(r'Remaining capacity:\t*(\d*)', battery).group(1))
 battery_bar = [bluefg, 'On AC', reset]
 
 #battery_state = ''
