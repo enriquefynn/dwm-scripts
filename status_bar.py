@@ -28,7 +28,7 @@ def getCoinFromBtce(coin):
     return ccoin
 
 #Weather
-city_name = 'London'
+city_name = 'Uberlandia'
 def getWeatherInfo(cityName):
     w = {}
     try:
@@ -63,7 +63,10 @@ if battery_state != 'high':
 
 #Wireless
 wlan = check_output(['ifconfig', 'wlan0'])
-ssid = re.search(r'ssid \t*\"(.+?)\"', wlan).group(1)
+try:
+    ssid = re.search(r'ssid \t*\"(.+?)\"', wlan).group(1)
+except:
+    ssid = ""
 
 #Date
 date = [check_output('date').strip()]
