@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import re
-from subprocess import check_output
+from subprocess import call, check_output
 
 redfg = '\x1b[38;5;196m'
 bluefg = '\x1b[38;5;21m'
