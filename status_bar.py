@@ -28,12 +28,11 @@ def getCoinFromBtce(coin):
     return ccoin
 
 #Weather
-city_name = 'London'
+city_name = 'Uberlandia'
 def getWeatherInfo(cityName):
     w = {}
     try:
         weather = json.loads(urllib2.urlopen("http://api.openweathermap.org/data/2.5/forecast/daily?q={}&units=metric&cnt=1".format(cityName)).read())['list'][0]
-        w['description'] = weather['weather'][0]['description']
         w['temp_min'] = weather['temp']['min']
         w['temp_max'] = weather['temp']['max']
     except:
@@ -43,7 +42,7 @@ def getWeatherInfo(cityName):
 weather = getWeatherInfo(city_name)
 weather_bar = []
 if weather != None:
-    weather_bar = "{} {}{}C{}-{}{}C{} | ".format(weather['description'], bluefg, weather['temp_min'], reset, redfg, weather['temp_max'], reset)
+    weather_bar = " {}{}C{}-{}{}C{} | ".format(bluefg, weather['temp_min'], reset, redfg, weather['temp_max'], reset)
 
 #Battery
 battery = check_output(['acpiconf','-i', '0'])
@@ -56,6 +55,8 @@ if battery_state != 'high':
         bg = greenbg
     elif 60 > battery_percentage > 30:
         bg = yellowbg
+    elif battery_percentage <= 3:
+        call(['shutdown', '-p', 'now'])
     else:
         bg = redbg
     battery_bar = ['Batt: ', bg, ' '*(battery_percentage/10), \
@@ -69,7 +70,7 @@ except:
     ssid = None
 
 #Date
-date = [check_output('date').strip()]
+date = [check_output(['date', '+%d/%m/%Y %H:%M']).strip()]
 
 attr_list = []
 attr_list += weather_bar
