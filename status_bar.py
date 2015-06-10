@@ -17,11 +17,13 @@ greenbg = '\x1b[48;5;47m'
 yellowbg = '\x1b[48;5;226m'
 blackbg = '\x1b[48;5;16m'
 reset = '\x1b[0m'
+proxy = urllib2.ProxyHandler()
+opener = urllib2.build_opener(proxy)
 
 #BTC
 def getCoinFromBtce(coin):
     try:
-        ccoin = round(json.loads(urllib2.urlopen("https://btc-e.com/api/2/{}_usd/ticker"\
+        ccoin = round(json.loads(opener.open("https://btc-e.com/api/2/{}_usd/ticker"\
                 .format(coin)).read())['ticker']['last'], 2)
     except:
         return None
@@ -32,7 +34,7 @@ city_name = 'Uberlandia'
 def getWeatherInfo(cityName):
     w = {}
     try:
-        weather = json.loads(urllib2.urlopen("http://api.openweathermap.org/data/2.5/forecast/daily?q={}&units=metric&cnt=1".format(cityName)).read())['list'][0]
+        weather = json.loads(opener.open("http://api.openweathermap.org/data/2.5/forecast/daily?q={}&units=metric&cnt=1".format(cityName)).read())['list'][0]
         w['temp_min'] = weather['temp']['min']
         w['temp_max'] = weather['temp']['max']
     except:
@@ -63,8 +65,8 @@ if battery_state != 'high':
             blackbg, ' '*(10-(battery_percentage/10)), reset, ' ', str(battery_percentage) + '%']
 
 #Wireless
-wlan = check_output(['ifconfig', 'wlan0'])
 try:
+    wlan = check_output(['ifconfig', 'wlan0'])
     ssid = re.search(r'ssid \t*\"*(.+?)\"* channel', wlan).group(1)
 except:
     ssid = None
