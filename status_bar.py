@@ -63,7 +63,8 @@ if battery_state != 'high':
         bg = redbg
     battery_bar = ['Batt: ', bg, ' '*(battery_percentage/10), \
             blackbg, ' '*(10-(battery_percentage/10)), reset, ' ', str(battery_percentage) + '%']
-
+    if battery_state == 'charging':
+        battery_bar.append('c')
 #Wireless
 try:
     wlan = check_output(['ifconfig', 'wlan0'])
@@ -71,10 +72,20 @@ try:
 except:
     ssid = None
 
+#Sound
+sound = re.search(r'hw.snd.default_unit: (.*)', check_output(['sysctl', 'hw.snd.default_unit'])).group(1)
+if sound == '0':
+    sound = 'Speaker'
+elif sound == '1':
+    sound = 'Headset'
+else:
+    sound = 'HDMI'
+
 #Date
 date = [check_output(['date', '+%d/%m/%Y %H:%M']).strip()]
 
 attr_list = []
+attr_list.extend(sound)
 attr_list += weather_bar
 if ssid != None:
     attr_list += ['wlan: ', winefg, ssid, reset, ' | ']
