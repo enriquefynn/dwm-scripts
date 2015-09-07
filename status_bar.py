@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import json
+import time
 import urllib2
 import re
 from subprocess import call,check_output
@@ -10,7 +11,7 @@ bluefg = '\x1b[38;5;21m'
 darkgreenfg = '\x1b[38;5;78m'
 darkbluefg = '\x1b[38;5;74m'
 winefg = '\x1b[38;5;118m'
-
+yellowfg = '\x1b[38;5;226m'
 
 redbg = '\x1b[48;5;196m'
 greenbg = '\x1b[48;5;47m'
@@ -30,13 +31,16 @@ def getCoinFromBtce(coin):
     return ccoin
 
 #Weather
-city_name = 'Uberlandia'
+city_name = 'Lugano'
 def getWeatherInfo(cityName):
     w = {}
     try:
-        weather = json.loads(opener.open("http://api.openweathermap.org/data/2.5/forecast/daily?q={}&units=metric&cnt=1".format(cityName)).read())['list'][0]
-        w['temp_min'] = weather['temp']['min']
-        w['temp_max'] = weather['temp']['max']
+        weather = json.loads(opener.open("http://api.openweathermap.org/data/2.5/weather?q={}&units=metric".format(cityName)).read())
+        w['temp_min'] = weather['main']['temp_min']
+        w['temp_act'] = weather['main']['temp']
+        w['temp_max'] = weather['main']['temp_max']
+        w['sunrise'] = weather['sys']['sunrise']
+        w['sunset'] = weather['sys']['sunset']
     except:
         return None
     return w
@@ -44,7 +48,13 @@ def getWeatherInfo(cityName):
 weather = getWeatherInfo(city_name)
 weather_bar = []
 if weather != None:
-    weather_bar = " {}{}C{}-{}{}C{} | ".format(bluefg, weather['temp_min'], reset, redfg, weather['temp_max'], reset)
+    sunrise = time.strftime('%H:%M', time.localtime(weather['sunrise']))
+    sunset = time.strftime('%H:%M', time.localtime(weather['sunset']))
+    weather_bar = " {}{}C{}-{}{}C{}-{}{}C{} {}{}{}-{}{}{} | ".format(bluefg, weather['temp_min'], reset, 
+            winefg, weather['temp_act'], reset, 
+            redfg, weather['temp_max'], reset,
+            yellowfg, sunrise, reset,
+            redfg, sunset, reset)
 
 #Battery
 battery = check_output(['acpiconf','-i', '0'])
@@ -91,12 +101,10 @@ if ssid != None:
     attr_list += ['wlan: ', winefg, ssid, reset, ' | ']
 
 btc_ticker = getCoinFromBtce('btc')
-ltc_ticker = getCoinFromBtce('ltc')
-if btc_ticker != None and ltc_ticker != None:
-    attr_list.extend(['{}BTC: {} {}LTC: {}{} '.format(darkgreenfg,\
+if btc_ticker != None:
+    attr_list.extend(['{}BTC: {} {}'.format(darkgreenfg,\
             btc_ticker,\
             darkbluefg,\
-            ltc_ticker,\
             reset)])
 attr_list += '| '
 attr_list.extend(battery_bar)
